@@ -19,8 +19,22 @@ mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, (err) => {
 })
 
 // SETTING UP Body-parser
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+
+// SETTING UP CORS
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers", 
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    )
+
+    if(req.method === "OPTIONS"){
+        res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, PATCH")
+        return res.send(200).json({})
+    }
+    next()
+})
 
 // SETTING UP MORGAN (LOG IN SERVER)
 app.use(morgan("dev"))
@@ -31,7 +45,7 @@ app.use("/api/orders", OrderRoute)
 
 // HANDLING ERROR REQUEST
 app.use((req, res, next) => {
-    const error = new Error("Not Found")
+    const error = new Error("Request Route Not Found")
     error.status = 404
     next(error)
 })

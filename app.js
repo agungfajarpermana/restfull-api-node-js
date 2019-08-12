@@ -19,7 +19,7 @@ mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, (err) => {
 })
 
 // SETTING UP Body-parser
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // SETTING UP CORS
@@ -45,7 +45,7 @@ app.use("/api/orders", OrderRoute)
 
 // HANDLING ERROR REQUEST
 app.use((req, res, next) => {
-    const error = new Error("Request Route Not Found")
+    const error = new Error("ROUTE NOT FOUND")
     error.status = 404
     next(error)
 })

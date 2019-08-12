@@ -32,7 +32,6 @@ exports.create_data_products = (req, res, next) => {
             return next(new Error(err))
 
         res.status(200).json({
-            status: true,
             products: {
                 _id: product._id,
                 name: product.name,
@@ -84,11 +83,10 @@ exports.update_data_products = (req, res, next) => {
                 return next(new Error("Problem updated products"))
            
             res.status(200).json({
-                status: true,
                 products: {
                     _id: products._id,
-                    name: products.name,
-                    price: products.price,
+                    name: req.body.name,
+                    price: req.body.price,
                     requests_detail: {
                         type: "GET",
                         url: `http://localhost:3000/api/products/${products._id}`
@@ -111,7 +109,6 @@ exports.delete_data_products = (req, res, next) => {
                 return next(new Error("Problem deleted product"))
 
             res.status(200).json({
-                status: true,
                 message: "Deleted products!",
                 requests_all: {
                     type: "GET",

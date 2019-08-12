@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 // MODEL MONGODB
 const Product = require("../models/Product")
 
@@ -25,6 +26,7 @@ exports.get_all_products = (req, res, next) => {
 
 exports.create_data_products = (req, res, next) => {
     Product.create({
+        _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         price: req.body.price
     }, (err, product) => {

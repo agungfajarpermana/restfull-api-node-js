@@ -1,24 +1,11 @@
-const express       = require("express")
-const app           = express()
-const mongoose      = require("mongoose")
-const bodyParser    = require("body-parser")
-const orderRoute    = require("./routes/Order")
+const http = require("http")
+const app  = require("./app")
 
+// .env File
 require("dotenv/config")
 
-// SETTING DATABASE
-mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, (err) => {
-    if(err) console.log(err)
+const server = http.createServer(app)
 
-    console.log("Connected database")
-})
-
-app.use(bodyParser.urlencoded({extended:true}))
-app.use(bodyParser.json())
-
-// SETTING ROUTE API
-app.use("/api/orders", orderRoute)
-
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log("running on port", process.env.PORT)
 })

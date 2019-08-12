@@ -1,17 +1,23 @@
 {
   "name": "restfull-api-node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node Js Restfull API V1",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
-  "author": "",
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "agungfp",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.9",
     "nodemon": "^1.19.1"
   }

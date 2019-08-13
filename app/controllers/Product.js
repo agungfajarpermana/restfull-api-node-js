@@ -1,9 +1,10 @@
 const mongoose = require("mongoose")
+
 // MODEL MONGODB
 const Product = require("../models/Product")
 
 exports.get_all_products = (req, res, next) => {
-    Product.find({}, "name price _id", (err, products) => {
+    Product.find({}, "name price _id image", (err, products) => {
         if(err)
             return next(new Error("No data entries"))
         
@@ -14,6 +15,7 @@ exports.get_all_products = (req, res, next) => {
                     _id: product._id,
                     name: product.name,
                     price: product.price,
+                    image: product.image,
                     requests_detail: {
                         type: "GET",
                         url: `http://localhost:3000/api/products/${product._id}`
@@ -28,7 +30,8 @@ exports.create_data_products = (req, res, next) => {
     Product.create({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        image: req.file.path
     }, (err, product) => {
         if(err)
             return next(new Error(err))
@@ -48,7 +51,7 @@ exports.create_data_products = (req, res, next) => {
 }
 
 exports.get_detail_products = (req, res, next) => {
-    Product.findById(req.params.productId, "name price _id", (err, products) => {
+    Product.findById(req.params.productId, "name price _id image", (err, products) => {
         if(err)
             return next(err)
         else if(!products)
@@ -59,6 +62,7 @@ exports.get_detail_products = (req, res, next) => {
                 _id: products._id,
                 name: products.name,
                 price: products.price,
+                image: products.image,
                 requests_all: {
                     type: "GET",
                     url: `http://localhost:3000/api/products`

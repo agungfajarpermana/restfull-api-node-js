@@ -62,7 +62,7 @@ exports.create_data_orders = (req, res, next) => {
             return next(new Error("Product not found"))
 
         Order.create({
-            _id: new mongoose.Types.ObjectId(),
+            _id: mongoose.Types.ObjectId(),
             product: products._id,
             quantity: req.body.quantity
         }, (err, orders) => {
@@ -82,7 +82,7 @@ exports.create_data_orders = (req, res, next) => {
                 }
             })
         })
-    }).populate("product", "name price")
+    })
 }
 
 exports.get_detail_orders = (req, res, next) => {

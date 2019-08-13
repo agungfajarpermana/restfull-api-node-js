@@ -19,6 +19,7 @@ mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, (err) => {
 })
 
 // SETTING UP Body-parser
+app.use("/uploads", express.static("uploads"))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 

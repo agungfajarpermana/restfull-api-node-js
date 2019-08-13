@@ -7,6 +7,7 @@ const morgan        = require("morgan")
 // ROUTE CONTROLLERS
 const OrderRoute      = require("./routes/Order")
 const ProductRoute    = require("./routes/Product")
+const UserRoute       = require("./routes/User")
 
 // .env File
 require("dotenv/config")
@@ -43,6 +44,7 @@ app.use(morgan("dev"))
 // SETTING ROUTE API
 app.use("/api/products", ProductRoute)
 app.use("/api/orders", OrderRoute)
+app.use("/api/users", UserRoute)
 
 // HANDLING ERROR REQUEST
 app.use((req, res, next) => {

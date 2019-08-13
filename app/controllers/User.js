@@ -1,6 +1,12 @@
 const mongoose  = require("mongoose")
-const User      = require("../models/User")
 const bcrypt    = require("bcrypt")
+const jwt       = require("jsonwebtoken")
+
+// .env file
+require("dotenv/config")
+
+// User model
+const User = require("../models/User")
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -13,7 +19,7 @@ exports.signup = (req, res, next) => {
             password: hash
         }, (err, users) => {
             if(err)
-                return next(new Error("Email exists"))
+                return next(err)
 
             res.status(200).json({
                 message: "Success signup",
@@ -21,6 +27,34 @@ exports.signup = (req, res, next) => {
                     email: users.email,
                     password: users.password
                 }
+            })
+        })
+    })
+}
+
+exports.signin = (req, res, next) => {
+    User.findOne({email: req.body.email}, (err, users) => {
+        if(err)
+            return next(err)
+        else if(!users)
+            return next(new Error("Sign in failed, just reports to admin!"))
+
+        bcrypt.compare(req.body.password, users.password, (err, result) => {
+            if(err)
+                return next(new Error("Password not match!"))
+            
+            // generate token
+            jwt.sign({
+                id: users._id,
+                email: users.email
+            }, process.env.JWT_Secret, { expiresIn: "1h" }, (err, token) => {
+                if(err)
+                    return next(err)
+
+                res.status(200).json({
+                    message: "Sign in success",
+                    token: token,
+                })
             })
         })
     })

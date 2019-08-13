@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const fs       = require("fs")
 
 // MODEL MONGODB
 const Product = require("../models/Product")
@@ -73,53 +74,65 @@ exports.get_detail_products = (req, res, next) => {
 }
 
 exports.update_data_products = (req, res, next) => {
-    Product.findById(req.params.productId, "name price _id", (err, products) => {
+    Product.findById(req.params.productId, "name price _id image", (err, products) => {
         if(err) 
             return next(err)
         else if (!products)
             return next(new Error("Product not found"))
-
-        Product.updateOne({_id: products._id}, {
-            $set: {
-                name: req.body.name,
-                price: req.body.price
-            }
-        }, (err) => {
+        
+        fs.unlink(`./${products.image}`, (err) => {
             if(err)
-                return next(new Error("Problem updated products"))
-           
-            res.status(200).json({
-                products: {
-                    _id: products._id,
+                return next(new Error("Image not found"))
+
+            Product.updateOne({_id: products._id}, {
+                $set: {
                     name: req.body.name,
                     price: req.body.price,
-                    requests_detail: {
-                        type: "GET",
-                        url: `http://localhost:3000/api/products/${products._id}`
-                    }
+                    image: `uploads/${req.file.filename}`
                 }
+            }, (err) => {
+                if(err)
+                    return next(new Error("Problem updated products"))
+               
+                res.status(200).json({
+                    products: {
+                        _id: products._id,
+                        name: req.body.name,
+                        price: req.body.price,
+                        image: `uploads/${req.file.filename}`,
+                        requests_detail: {
+                            type: "GET",
+                            url: `http://localhost:3000/api/products/${products._id}`
+                        }
+                    }
+                })
             })
         })
     })
 }
 
 exports.delete_data_products = (req, res, next) => {
-    Product.findById(req.params.productId, (err, product) => {
+    Product.findById(req.params.productId, (err, products) => {
         if(err)
             return next(err)
-        else if(!product)
+        else if(!products)
             return next(new Error("Product not found"))
 
-        Product.deleteOne({_id: product._id}, (err) => {
+        fs.unlink(`./${products.image}`, (err) => {
             if(err)
-                return next(new Error("Problem deleted product"))
+                return next("Image not found")
 
-            res.status(200).json({
-                message: "Deleted products!",
-                requests_all: {
-                    type: "GET",
-                    url: "http://localhost:3000/api/products"
-                }
+            Product.deleteOne({_id: products._id}, (err) => {
+                if(err)
+                    return next(new Error("Problem deleted product"))
+    
+                res.status(200).json({
+                    message: "Deleted products!",
+                    requests_all: {
+                        type: "GET",
+                        url: "http://localhost:3000/api/products"
+                    }
+                })
             })
         })
     })

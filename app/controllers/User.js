@@ -46,7 +46,7 @@ exports.signin = (req, res, next) => {
             // generate token
             jwt.sign({
                 id: users._id,
-                email: users.email
+                email: users.email,
             }, process.env.JWT_Secret, { expiresIn: "1h" }, (err, token) => {
                 if(err)
                     return next(err)

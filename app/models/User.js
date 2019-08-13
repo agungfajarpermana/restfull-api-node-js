@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password wajib di isi!"]
+    },
+    admin: {
+        type: Boolean,
+        default: false
     }
 })
 

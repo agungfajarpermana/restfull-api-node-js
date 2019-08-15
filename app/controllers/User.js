@@ -25,7 +25,7 @@ exports.signup = (req, res, next) => {
                 message: "Success signup",
                 users: {
                     email: users.email,
-                    password: users.password
+                    admin: users.admin
                 }
             })
         })
@@ -37,7 +37,7 @@ exports.signin = (req, res, next) => {
         if(err)
             return next(err)
         else if(!users)
-            return next(new Error("Sign in failed, just reports to admin!"))
+            return next(new Error("Signin failed, just reports to admin!"))
 
         bcrypt.compare(req.body.password, users.password, (err, result) => {
             if(err)
@@ -47,7 +47,8 @@ exports.signin = (req, res, next) => {
             jwt.sign({
                 id: users._id,
                 email: users.email,
-            }, process.env.JWT_Secret, { expiresIn: "1h" }, (err, token) => {
+                admin: users.admin
+            }, process.env.JWT_Secret, { expiresIn: "1 days" }, (err, token) => {
                 if(err)
                     return next(err)
 

@@ -20,47 +20,49 @@ exports.get_all_orders = (req, res, next) => {
                         product: order.product,
                         quantity: order.quantity,
                     },
-                    requests_detail: {
-                        type: "GET",
-                        url: `http://localhost:3000/api/orders/${order._id}`
-                    },
-                    requests_post: {
-                        type: "POST",
-                        url: "http://localhost:3000/api/orders",
-                        rules: {
-                            logged: "required",
-                            productId: "required",
-                            quantity: "optional"
-                        }
-                    },
-                    requests_update: {
-                        type: "PATCH",
-                        url:  `http://localhost:3000/api/orders/${order._id}`,
-                        rules: {
-                            logged: "required",
-                            productId: "required",
-                            quantity: "optional"
-                        }
-                    },
-                    requests_delete: {
-                        type: "DELETE",
-                        url: `http://localhost:3000/api/orders/${order._id}`,
-                        rules: {
-                            logged: "required",
-                            _id: "required"
+                    requests: {
+                        detail: {
+                            type: "GET",
+                            url: `http://localhost:3000/api/orders/${order._id}`
+                        },
+                        create: {
+                            type: "POST",
+                            url: "http://localhost:3000/api/orders",
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
+                        },
+                        update: {
+                            type: "PATCH",
+                            url:  `http://localhost:3000/api/orders/${order._id}`,
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
+                        },
+                        delete: {
+                            type: "DELETE",
+                            url: `http://localhost:3000/api/orders/${order._id}`,
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
                         }
                     }
                 }
             })
         })
-    }).populate("product", "name price") // relationship mongooses with mongodb
+    }).populate("product", "name price") // relationship mongoose with mongodb
 }
 
 exports.create_data_orders = (req, res, next) => {
-    Product.findById(req.body.productId, "product quantity _id", (err, products) => {
+    Product.findById(req.body.productId, (err, products) => {
         if(err)
+            return next(err)
+        else if(!products)
             return next(new Error("Product not found"))
-
+        
         Order.create({
             _id: mongoose.Types.ObjectId(),
             product: products._id,
@@ -75,9 +77,11 @@ exports.create_data_orders = (req, res, next) => {
                     _id: orders._id,
                     product: orders.product,
                     quantity: orders.quantity,
-                    requests_detail: {
-                        type: "GET",
-                        url: `http://localhost:3000/api/orders/${orders._id}`
+                    requests: {
+                        detail: {
+                            type: "GET",
+                            url: `http://localhost:3000/api/orders/${orders._id}`
+                        }
                     }
                 }
             })
@@ -98,9 +102,11 @@ exports.get_detail_orders = (req, res, next) => {
                 product: orders.product,
                 quantity: orders.quantity
             },
-            requests_all: {
-                type: "GET",
-                url: "http://localhost:3000/api/orders"
+            requests: {
+                all: {
+                    type: "GET",
+                    url: "http://localhost:3000/api/orders"
+                }
             }
         })
     }).populate("product", "name price")
@@ -128,9 +134,11 @@ exports.update_data_orders = (req, res, next) => {
                     product: req.body.productId,
                     quantity: req.body.quantity
                 },
-                requests_detail: {
-                    type: "GET",
-                    url: `http://localhost:3000/api/orders/${orders._id}`
+                requests: {
+                    detail: {
+                        type: "GET",
+                        url: `http://localhost:3000/api/orders/${orders._id}`
+                    }
                 }
             })
         })
@@ -150,9 +158,11 @@ exports.delete_data_orders = (req, res, next) => {
 
             res.status(200).json({
                 message: "Deleted order",
-                requests_all: {
-                    type: "GET",
-                    url: "http://localhost:3000/api/orders"
+                requests: {
+                    all: {
+                        type: "GET",
+                        url: "http://localhost:3000/api/orders"
+                    }
                 }
             })
         })

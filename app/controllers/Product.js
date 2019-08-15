@@ -17,9 +17,35 @@ exports.get_all_products = (req, res, next) => {
                     name: product.name,
                     price: product.price,
                     image: product.image,
-                    requests_detail: {
-                        type: "GET",
-                        url: `http://localhost:3000/api/products/${product._id}`
+                    requests: {
+                        detail: {
+                            type: "GET",
+                            url: `http://localhost:3000/api/products/${product._id}`
+                        },
+                        create: {
+                            type: "POST",
+                            url: "http://localhost:3000/api/products",
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
+                        },
+                        update: {
+                            type: "PATCH",
+                            url:  `http://localhost:3000/api/products/${product._id}`,
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
+                        },
+                        delete: {
+                            type: "DELETE",
+                            url: `http://localhost:3000/api/products/${product._id}`,
+                            rules: {
+                                logged: "required",
+                                id: "required"
+                            }
+                        }
                     }
                }
             })
@@ -53,9 +79,11 @@ exports.create_data_products = (req, res, next) => {
                 name: product.name,
                 price: product.price,
                 image: product.image,
-                requests_detail: {
-                    type: "GET",
-                    url: `http://localhost:3000/api/products/${product._id}`
+                requests: {
+                    detail: {
+                        type: "GET",
+                        url: `http://localhost:3000/api/products/${product._id}`
+                    }
                 }
             }
         })
@@ -75,9 +103,11 @@ exports.get_detail_products = (req, res, next) => {
                 name: products.name,
                 price: products.price,
                 image: products.image,
-                requests_all: {
-                    type: "GET",
-                    url: `http://localhost:3000/api/products`
+                requests: {
+                    all: {
+                        type: "GET",
+                        url: `http://localhost:3000/api/products/${products._id}`
+                    }
                 }
             }
         })
@@ -115,9 +145,11 @@ exports.update_data_products = (req, res, next) => {
                                 name: req.body.name,
                                 price: req.body.price,
                                 image: `uploads/${req.file.filename}`,
-                                requests_detail: {
-                                    type: "GET",
-                                    url: `http://localhost:3000/api/products/${products._id}`
+                                requests: {
+                                    detail: {
+                                        type: "GET",
+                                        url: `http://localhost:3000/api/products/${products._id}`
+                                    }
                                 }
                             }
                         })
@@ -141,9 +173,11 @@ exports.update_data_products = (req, res, next) => {
                             name: req.body.name,
                             price: req.body.price,
                             image: `uploads/${req.file.filename}`,
-                            requests_detail: {
-                                type: "GET",
-                                url: `http://localhost:3000/api/products/${products._id}`
+                            requests: {
+                                detail: {
+                                    type: "GET",
+                                    url: `http://localhost:3000/api/products/${products._id}`
+                                }
                             }
                         }
                     })
@@ -166,9 +200,11 @@ exports.update_data_products = (req, res, next) => {
                         name: req.body.name,
                         price: req.body.price,
                         image: products.image,
-                        requests_detail: {
-                            type: "GET",
-                            url: `http://localhost:3000/api/products/${products._id}`
+                        requests: {
+                            detail: {
+                                type: "GET",
+                                url: `http://localhost:3000/api/products/${products._id}`
+                            }
                         }
                     }
                 })
@@ -198,9 +234,11 @@ exports.delete_data_products = (req, res, next) => {
         
                     res.status(200).json({
                         message: "Deleted products!",
-                        requests_all: {
-                            type: "GET",
-                            url: "http://localhost:3000/api/products"
+                        requests: {
+                            all: {
+                                type: "GET",
+                                url: "http://localhost:3000/api/products"
+                            }
                         }
                     })
                 })
@@ -212,9 +250,11 @@ exports.delete_data_products = (req, res, next) => {
     
                 res.status(200).json({
                     message: "Deleted products!",
-                    requests_all: {
-                        type: "GET",
-                        url: "http://localhost:3000/api/products"
+                    requests: {
+                        all: {
+                            type: "GET",
+                            url: "http://localhost:3000/api/products"
+                        }
                     }
                 })
             })
